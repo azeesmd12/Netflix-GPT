@@ -9,6 +9,7 @@ const Login = () => {
 
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
+  const fullNameRef = useRef(null);
 
   const handleSignUpToggle = () => {
     setSignUpToggle(!signUpToggle);
@@ -25,6 +26,13 @@ const Login = () => {
     if (message) return;
   };
 
+  const handleSignUpSubmit = (e) => {
+    e.preventDefault();
+    const emailValue = emailRef.current?.value;
+    const passwordValue = passwordRef.current?.value;
+    const fullName = fullNameRef.current?.value;
+  };
+
   return (
     <div className="relative min-h-screen w-full flex flex-col">
       <div className="absolute top-0 left-0 min-h-screen w-full">
@@ -37,7 +45,14 @@ const Login = () => {
       </div>
       <Header onSignUpToggle={handleSignUpToggle} />
       {signUpToggle ? (
-        <Signup onSignUpToggle={handleSignUpToggle} />
+        <Signup
+          onSignUpToggle={handleSignUpToggle}
+          onSignUpSubmit={handleSignUpSubmit}
+          emailRef={emailRef}
+          passwordRef={passwordRef}
+          fullNameRef={fullNameRef}
+          errorMessage={errorMessage}
+        />
       ) : (
         <LoginContent
           onSignUpToggle={() => setSignUpToggle(!signUpToggle)}

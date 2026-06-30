@@ -1,6 +1,6 @@
 import React from "react";
 
-const Signup = ({ onSignUpToggle }) => {
+const Signup = ({ onSignUpToggle, emailRef, passwordRef, fullNameRef, onSignUpSubmit, errorMessage }) => {
   return (
     <div className="absolute top-1/2 left-1/2 -translate-1/2 w-120 h-120 p-8 text-center bg-linear-to-t from-black/70 to-black/50">
       <span onClick={onSignUpToggle}>
@@ -17,20 +17,29 @@ const Signup = ({ onSignUpToggle }) => {
         </svg>
       </span>
       <p className="p-4 mb-2 text-white text-2xl font-medium ">Sign Up</p>
-      <form className="">
+      <form onSubmit={onSignUpSubmit}>
         <input
+          ref={fullNameRef}
           className="text-white px-6 py-4 mb-4 border border-white rounded-sm"
           type="text"
           placeholder="Full Name"
         />
-        <input className="text-white px-6 py-4 mb-4 border border-white rounded-sm" type="text" placeholder="Email" />
         <input
+          ref={emailRef}
+          className="text-white px-6 py-4 mb-4 border border-white rounded-sm"
+          type="text"
+          placeholder="Email"
+        />
+        <input
+          ref={passwordRef}
           className="text-white px-6 py-4 mb-4 border border-white rounded-sm"
           type="password"
           placeholder="Password"
         />
         <br />
-        <button className="px-12 py-2 m-2 text-white text-lg bg-red-600 rounded-sm">Sign Up</button>
+        <button type="submit" className="px-12 py-2 m-2 text-white text-lg bg-red-600 rounded-sm">
+          Sign Up
+        </button>
       </form>
     </div>
   );
