@@ -37,7 +37,8 @@ const Signup = ({ onSignUpToggle, emailRef, passwordRef, fullNameRef, onSignUpSu
           placeholder="Password"
         />
         <br />
-        <button type="submit" className="px-12 py-2 m-2 text-white text-lg bg-red-600 rounded-sm">
+        {errorMessage && <p className="text-red-700">* {errorMessage}</p>}
+        <button type="submit" className="px-12 py-2 m-2 text-white text-lg bg-red-600 rounded-sm cursor-pointer">
           Sign Up
         </button>
       </form>

@@ -2,6 +2,8 @@ import React, { useState, useRef } from "react";
 import Header from "./Header";
 import Signup from "./Signup";
 import { validateFormDetails } from "../../utils/validate";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "../../utils/firebase";
 
 const Login = () => {
   const [signUpToggle, setSignUpToggle] = useState(false);
@@ -13,24 +15,62 @@ const Login = () => {
 
   const handleSignUpToggle = () => {
     setSignUpToggle(!signUpToggle);
+    setErrorMessage("");
   };
 
   //onclick event when login
   const handleOnLogInEvent = (e) => {
     e.preventDefault();
-    const emailValue = emailRef.current?.value;
-    const passwordValue = passwordRef.current?.value;
+    const email = emailRef.current?.value;
+    const password = passwordRef.current?.value;
 
-    const message = validateFormDetails({ email: emailValue, password: passwordValue });
+    const message = validateFormDetails({ email, password });
     setErrorMessage(message);
     if (message) return;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        setErrorMessage(errorMessage);
+      });
   };
 
   const handleSignUpSubmit = (e) => {
     e.preventDefault();
-    const emailValue = emailRef.current?.value;
-    const passwordValue = passwordRef.current?.value;
+    const email = emailRef.current?.value;
+    const password = passwordRef.current?.value;
     const fullName = fullNameRef.current?.value;
+
+    const message = validateFormDetails({ email, password });
+    setErrorMessage(message);
+    if (message) return;
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed up
+        return userCredential.user;
+      })
+      .then((user) => {
+        return updateProfile(user, {
+          displayName: fullName,
+          photoURL:
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMPU5gJUj46ufL6FQfX3XvM7lR7qtcMy63tuj2siLuUQ&s=10",
+        }).then(() => user);
+      })
+      .then((updatedUser) => {
+        console.log("updatedUser", updatedUser);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        setErrorMessage(errorMessage);
+      });
   };
 
   return (
@@ -55,7 +95,7 @@ const Login = () => {
         />
       ) : (
         <LoginContent
-          onSignUpToggle={() => setSignUpToggle(!signUpToggle)}
+          onSignUpToggle={handleSignUpToggle}
           onSubmit={handleOnLogInEvent}
           emailRef={emailRef}
           passwordRef={passwordRef}
